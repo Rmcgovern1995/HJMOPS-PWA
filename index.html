@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>H&J Medical Operations</title>
+  <!-- Early inline script to set the theme class before CSS loads.
+       This prevents a flash of incorrect theme (FOUC).  It reads
+       the stored dark mode flag from localStorage and applies
+       the class to the root element before any CSS is parsed. -->
+  <script>
+    (function(){
+      try {
+        var dark = localStorage.getItem('hjmops_dark');
+        if (dark === 'true') {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <!-- Main styles -->
+  <link rel="stylesheet" href="./styles/main.css" />
+  <link rel="stylesheet" href="./styles/theme.css" />
+  <link rel="manifest" href="./manifest.json" />
+</head>
+<body>
+  <!-- Skip link for screen reader and keyboard users -->
+  <a href="#content" class="skip-link">Skip to main content</a>
+  <div id="app">
+    <!-- Sidebar navigation -->
+    <aside id="sidebar" class="sidebar" role="navigation" aria-label="Primary">
+      <div class="logo">H&J&nbsp;OPS</div>
+      <nav>
+        <!-- Navigation links use anchors with hash fragments.  CSS and
+             JS will show/hide panels and highlight the active link
+             based on the current hash. -->
+        <a href="#dashboardSection" class="nav-link active">Dashboard</a>
+        <a href="#orderEntrySection" class="nav-link">Order&nbsp;Entry</a>
+        <a href="#routeBoardSection" class="nav-link">Route&nbsp;Board</a>
+        <a href="#inventorySection" class="nav-link">Inventory</a>
+        <a href="#analyticsSection" class="nav-link">Analytics</a>
+        <a href="#settingsSection" class="nav-link">Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="themeToggle" title="Toggle dark/light">🌙</button>
+      </div>
+    </aside>
+
+    <!-- Main content area -->
+    <main id="content" role="main">
+      <section id="dashboardSection" class="panel"></section>
+      <section id="orderEntrySection" class="panel"></section>
+      <section id="routeBoardSection" class="panel"></section>
+      <section id="inventorySection" class="panel"></section>
+      <section id="analyticsSection" class="panel"></section>
+      <section id="settingsSection" class="panel"></section>
+    </main>
+  </div>
+
+  <!-- Modal container for forms -->
+  <div id="modal" class="modal" hidden role="dialog" aria-modal="true">
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+
+  <!-- Login overlay shown when no user is logged in -->
+  <div id="loginOverlay" class="modal" hidden role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <form id="loginForm">
+        <h2>Login</h2>
+        <label>Name<br/><input type="text" name="username" required></label><br/>
+        <label>Role<br/>
+          <select name="role">
+            <option value="dispatcher">Dispatcher</option>
+            <option value="driver">Driver</option>
+            <option value="admin">Admin</option>
+          </select>
+        </label><br/>
+        <div style="margin-top:0.5rem; text-align:right;">
+          <button type="submit">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast/progress bar for background tasks -->
+  <div id="toast" class="toast hidden" aria-live="polite" aria-atomic="true">Loading…</div>
+
+  <!-- Bottom navigation bar for mobile screens -->
+  <nav id="bottomNav" class="bottom-nav">
+    <a href="#dashboardSection" class="nav-link">🏠</a>
+    <a href="#orderEntrySection" class="nav-link">📝</a>
+    <a href="#routeBoardSection" class="nav-link">🚚</a>
+    <a href="#inventorySection" class="nav-link">📦</a>
+    <a href="#analyticsSection" class="nav-link">📊</a>
+    <a href="#settingsSection" class="nav-link">⚙️</a>
+  </nav>
+
+  <!-- Application scripts -->
+  <!--
+    The main application is no longer built with ES modules due to
+    restrictions when loading via the file:// scheme.  Instead we
+    include plain scripts that expose global variables and a
+    self‑invoking function which bootstraps the app.  Data for
+    allowables and towns is loaded from plain scripts generated at
+    build time.  See app.js for the entry point.
+  -->
+  <script src="./data/allowablesDataPlain.js"></script>
+  <script src="./data/townsDataPlain.js"></script>
+  <script src="./js/workerPool.js"></script>
+  <script src="./js/bus.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
